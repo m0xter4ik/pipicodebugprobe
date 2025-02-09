@@ -107,6 +107,9 @@ void usb_thread(void *ptr)
         else
             gpio_put(PROBE_USB_CONNECTED_LED, 0);
 #endif
+#ifdef PROBE_EXT_LED
+        ext_led_usb_connected(tud_ready());
+#endif
         // If suspended or disconnected, delay for 1ms (20 ticks)
         if (tud_suspended() || !tud_connected())
             xTaskDelayUntil(&wake, 20);
@@ -115,6 +118,18 @@ void usb_thread(void *ptr)
             xTaskDelayUntil(&wake, 1);
     } while (1);
 }
+
+#ifdef PROBE_EXT_LED
+TaskHandle_t ext_led_taskhandle;
+
+void ext_led_thread(void *ptr)
+{
+    while (1) {
+        ext_led_update_status();
+        vTaskDelay( pdMS_TO_TICKS(100) );
+    };
+}
+#endif
 
 // Workaround API change in 0.13
 #if (TUSB_VERSION_MAJOR == 0) && (TUSB_VERSION_MINOR <= 12)
@@ -139,6 +154,9 @@ int main(void) {
         xTaskCreate(usb_thread, "TUD", configMINIMAL_STACK_SIZE, NULL, TUD_TASK_PRIO, &tud_taskhandle);
 #if PICO_RP2040
         xTaskCreate(dev_mon, "WDOG", configMINIMAL_STACK_SIZE, NULL, TUD_TASK_PRIO, &mon_taskhandle);
+#endif
+#ifdef PROBE_EXT_LED
+        xTaskCreate(ext_led_thread, "EXT_LED", configMINIMAL_STACK_SIZE, NULL, DAP_TASK_PRIO, &ext_led_taskhandle);
 #endif
         vTaskStartScheduler();
     }

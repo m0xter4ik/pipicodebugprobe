@@ -66,6 +66,9 @@
 //#define PROBE_UART_RX_LED 7
 //#define PROBE_UART_TX_LED 8
 
+#define PROBE_EXT_LED       1
+#define PROBE_WS8212_LED    16
+
 /* Pinout
  * 8    TX
  * 9    RX

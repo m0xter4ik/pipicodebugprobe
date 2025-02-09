@@ -50,6 +50,10 @@ This information includes:
 #include "probe_config.h"
 #include "probe.h"
 
+#ifdef PROBE_EXT_LED
+#include "ext_led.h"
+#endif
+
 /// Processor Clock of the Cortex-M MCU used in the Debug Unit.
 /// This value is used to calculate the SWD/JTAG clock speed.
 /* Debugprobe actually uses kHz rather than Hz, so just lie about it here */
@@ -505,6 +509,9 @@ __STATIC_INLINE void LED_CONNECTED_OUT (uint32_t bit) {
 #ifdef PROBE_DAP_CONNECTED_LED
   gpio_put(PROBE_DAP_CONNECTED_LED, bit);
 #endif
+#ifdef PROBE_EXT_LED
+  ext_led_dap_connected(bit);
+#endif
 }
 
 /** Debug Unit: Set status Target Running LED.
@@ -515,6 +522,9 @@ __STATIC_INLINE void LED_CONNECTED_OUT (uint32_t bit) {
 __STATIC_INLINE void LED_RUNNING_OUT (uint32_t bit) {
 #ifdef PROBE_DAP_RUNNING_LED
   gpio_put(PROBE_DAP_RUNNING_LED, bit);
+#endif
+#ifdef PROBE_EXT_LED
+  ext_led_dap_running(bit);
 #endif
 }
 
@@ -570,6 +580,9 @@ __STATIC_INLINE void DAP_SETUP (void) {
 #ifdef PROBE_DAP_RUNNING_LED
     gpio_init(PROBE_DAP_RUNNING_LED);
     gpio_set_dir(PROBE_DAP_RUNNING_LED, GPIO_OUT);
+#endif
+#ifdef PROBE_EXT_LED
+    ext_led_init();
 #endif
 }
 
