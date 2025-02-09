@@ -66,3 +66,6 @@ cmake -DDEBUG_ON_PICO=1 -DPICO_BOARD=pico2 -DPICO_PLATFORM=rp2350 ../
 # TODO
 - AutoBaud selection, as PIO is a capable frequency counter
 - Possibly include RTT support
+
+# Pinout
+![Pico Zero pinout](picozero_pinout.png)
