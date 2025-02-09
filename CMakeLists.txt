@@ -67,6 +67,16 @@ if (DEBUG_ON_PICO)
     endif ()
 endif ()
 
+option (DEBUG_ON_PICO_ZERO "Compile firmware for the Pico Zero instead of Debug Probe" OFF)
+if (DEBUG_ON_PICO_ZERO)
+    target_compile_definitions (debugprobe PRIVATE
+        DEBUG_ON_PICO_ZERO=1
+    )
+    set_target_properties(debugprobe PROPERTIES
+        OUTPUT_NAME "debugprobe_on_picozero"
+    )
+endif ()
+
 
 target_link_libraries(debugprobe PRIVATE
         pico_multicore
